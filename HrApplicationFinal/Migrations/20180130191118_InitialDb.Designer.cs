@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 
-namespace HrApplicationFinal.Migrations
+namespace HrApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171015071543_test1")]
-    partial class test1
+    [Migration("20180130191118_InitialDb")]
+    partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
