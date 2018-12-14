@@ -1,0 +1,73 @@
+﻿@model IEnumerable<HrApplicationFinal.Models.ViewModels.AdminViewModels.ListCompanyTreeStructureViewModel>
+
+@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+<div class="col-sm-13 col-md-13">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Organization
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-condensed" style="border-collapse:collapse;">
+                <tbody>
+                    @{int incrementOne = 1;}
+                    @foreach (var country in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="#item-@incrementOne" class="list-group-item" data-toggle="collapse">
+                                    <i class="glyphicon glyphicon-chevron-right"></i> @Html.DisplayFor(modelItem => country.CountryName) | @Html.DisplayFor(modelItem => country.Capital)
+                                </a>
+                                <div class="list-group collapse" id="item-@incrementOne">
+                                    @{int incrementTwo = 1;}
+
+                                    @foreach (var department in Model.Where(c => c.Id.Equals(country.Id)).SelectMany(i => i.Department).OrderBy(d => d.DepartmentName))
+                                    {
+
+                                        <a href="#item-@incrementOne-@incrementTwo" class="list-group-item" data-toggle="collapse">
+                                            <i class="glyphicon glyphicon-chevron-right"></i>@Html.DisplayFor(modelItem => department.DepartmentName)
+                                        </a>
+                                        <div class="list-group collapse" id="item-@incrementOne-@incrementTwo">
+                                            <div href="#" class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-sm-7">
+                                                        <h5>
+                                                            @Html.DisplayNameFor(modelItem => department.DepartmentCity):  @Html.DisplayFor(modelItem => department.DepartmentCity)
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <h5>
+                                                            @Html.DisplayNameFor(modelItem => department.DepartmentAddressLine):  @Html.DisplayFor(modelItem => department.DepartmentAddressLine)
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <h5>
+                                                            @Html.DisplayNameFor(modelItem => department.DepartmentPhone):  @Html.DisplayFor(modelItem => department.DepartmentPhone)
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <h5>
+                                                            @Html.DisplayNameFor(modelItem => department.DepartmentBudget):  @Html.DisplayFor(modelItem => department.DepartmentBudget)
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        incrementTwo++;
+                                    }
+
+                                </div>
+
+                            </td>
+                        </tr>
+                        incrementOne++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

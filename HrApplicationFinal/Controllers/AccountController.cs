@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using HrApplicationFinal.Models;
-using HrApplicationFinal.Models.AccountViewModels;
+using HrApplicationFinal.Models.ViewModels.AccountViewModels;
 using HrApplicationFinal.Services;
 
 namespace HrApplicationFinal.Controllers

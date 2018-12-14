@@ -5,6 +5,61 @@
     <UserSecretsId>aspnet-HrApplicationFinal-D5D6DE2E-ACD5-4D93-B143-0C21095BB37E</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20180130191118_InitialDb.cs" />
+    <Compile Remove="Migrations\20180130191118_InitialDb.Designer.cs" />
+    <Compile Remove="Migrations\20180713203621_Initial.cs" />
+    <Compile Remove="Migrations\20180713203621_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180713222105_Initial.cs" />
+    <Compile Remove="Migrations\20180713222105_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180713222249_Initial.cs" />
+    <Compile Remove="Migrations\20180713222249_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180713224706_Initial.cs" />
+    <Compile Remove="Migrations\20180713224706_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180713230230_Initial.cs" />
+    <Compile Remove="Migrations\20180713230230_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714062341_Initial.cs" />
+    <Compile Remove="Migrations\20180714062341_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714062407_Initial.cs" />
+    <Compile Remove="Migrations\20180714062407_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714062919_Initial.cs" />
+    <Compile Remove="Migrations\20180714062919_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714063021_Initial.cs" />
+    <Compile Remove="Migrations\20180714063021_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714063052_Initial.cs" />
+    <Compile Remove="Migrations\20180714063052_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714063618_Initial.cs" />
+    <Compile Remove="Migrations\20180714063618_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714065456_Initial.cs" />
+    <Compile Remove="Migrations\20180714065456_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714071410_Initial.cs" />
+    <Compile Remove="Migrations\20180714071410_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714072105_Initial.cs" />
+    <Compile Remove="Migrations\20180714072105_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714072548_Initial.cs" />
+    <Compile Remove="Migrations\20180714072548_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714073451_Initial.cs" />
+    <Compile Remove="Migrations\20180714073451_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714074347_Initial.cs" />
+    <Compile Remove="Migrations\20180714074347_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714075009_Initial.cs" />
+    <Compile Remove="Migrations\20180714075009_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714082658_Initial.cs" />
+    <Compile Remove="Migrations\20180714082658_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714082745_Initial.cs" />
+    <Compile Remove="Migrations\20180714082745_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714084112_Initial.cs" />
+    <Compile Remove="Migrations\20180714084112_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714100924_Add-Migration Initial.cs" />
+    <Compile Remove="Migrations\20180714100924_Add-Migration Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714102815_Initial.cs" />
+    <Compile Remove="Migrations\20180714102815_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714103912_Initial.cs" />
+    <Compile Remove="Migrations\20180714103912_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180714152600_Initial.cs" />
+    <Compile Remove="Migrations\20180714152600_Initial.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />

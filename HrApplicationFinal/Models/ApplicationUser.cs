@@ -1,15 +1,16 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace HrApplicationFinal.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        
         public ApplicationUser () : base () { }
-
-        public String Id { get; set; }
-
+  
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime SetupDate { get; set; }
 
@@ -36,7 +37,7 @@ namespace HrApplicationFinal.Models
 
         [Display(Name = "Maximum Salary"), Required(ErrorMessage = "Field can't be empty"), Range(0, 99999.99, ErrorMessage = "Maximum salary can't be lower than {1} or bigger than {2}")]
         public Decimal SalaryMax { get; set; }
-
+        [Required]
         public virtual Department Department { get; set; }
 
         public string FullName

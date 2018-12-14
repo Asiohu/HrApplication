@@ -17,13 +17,17 @@ namespace HrApplicationFinal.Data
         {
             context.Database.EnsureCreated();
 
-            // Look for any users and deparments.
-            if(!context.Departments.Any())
+            if(!context.Countries.Any())
+            {
+                logger.LogInformation($"No Countries! lets create some!");
+                await CreateDefaultCountries(logger, context);
+            }
+            if (!context.Departments.Any())
             {
                 logger.LogInformation($"No departments! lets create some!");
-                await CreateDefaultDepartment(logger, context);
+                await CreateDefaultDepartments(logger, context);
             }
-            if(!context.Users.Any())
+            if (!context.Users.Any())
             {
                 logger.LogInformation($"No users! lets create some!");
                 await CreateDefaultUserAndRoleForApplication(userManager, roleManager, logger, context);
@@ -35,15 +39,45 @@ namespace HrApplicationFinal.Data
             }
         }
 
-        private static async Task CreateDefaultDepartment(ILogger<ApplicationDbInitialize> logger, ApplicationDbContext context)
+        private static async Task CreateDefaultCountries(ILogger<ApplicationDbInitialize> logger, ApplicationDbContext context)
         {
+            logger.LogInformation($"Create default countries");
+            var countries = new Country[]
+            {
+                new Country {CountryId = Guid.NewGuid().ToString(), CountryName = CountryNames.Denmark.ToString(), Capital = CountryCapitalName.Copenhagen.ToString(), SetupDate = new DateTime(2015, 1, 12) },
+                new Country {CountryId = Guid.NewGuid().ToString(), CountryName = CountryNames.Sweden.ToString(), Capital = CountryCapitalName.Stockholm.ToString(), SetupDate = new DateTime(2015, 1, 12) },
+                new Country {CountryId = Guid.NewGuid().ToString(), CountryName = CountryNames.Norway.ToString(), Capital = CountryCapitalName.Oslo.ToString(), SetupDate = new DateTime(2016, 1, 12) },
+                new Country {CountryId = Guid.NewGuid().ToString(), CountryName = CountryNames.Japan.ToString(), Capital = CountryCapitalName.Tokyo.ToString(), SetupDate = new DateTime(2014, 1, 12) }
+            };
+            foreach (Country c in countries)
+            {
+                context.Countries.Add(c);
+            }
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task CreateDefaultDepartments(ILogger<ApplicationDbInitialize> logger, ApplicationDbContext context)
+        {
+            var Japan = context.Countries.Where(x => x.CountryName.Equals(CountryNames.Japan.ToString())).Single();
+            var Sweden = context.Countries.Where(x => x.CountryName.Equals(CountryNames.Sweden.ToString())).Single();
+            var Denmark = context.Countries.Where(x => x.CountryName.Equals(CountryNames.Denmark.ToString())).Single();
+            var Norway = context.Countries.Where(x => x.CountryName.Equals(CountryNames.Norway.ToString())).Single();
+
+
             logger.LogInformation($"Create default departments");
             var departments = new Department[]
             {
-                new Department {Id = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.Economics, SetupDate = new DateTime(2015, 1, 12) },
-                new Department {Id = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.HR, SetupDate = new DateTime(2015, 4, 12) },
-                new Department {Id = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.IT, SetupDate = new DateTime(2015, 12, 12) },
-                new Department {Id = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.Economics, SetupDate = new DateTime(2015, 5, 12) }
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.Economics.ToString(), SetupDate = new DateTime(2015, 1, 12), DepartmentBudget = 300, Country = Japan, DepartmentCity = "Tokyo", DepartmentPhone = "+81123456", DepartmentAddressLine = "2 Chome-7-7-9 Nagatachō, 千代田区 Chiyoda-ku, Tōkyō-to 100-0014" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.HR.ToString(), SetupDate = new DateTime(2015, 4, 12), DepartmentBudget = 500, Country = Japan, DepartmentCity = "Tokyo", DepartmentPhone = "+834636", DepartmentAddressLine = "2 Chome-10-5 Nagatachō, Chiyoda-ku, Tōkyō-to 100-0014" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.IT.ToString(), SetupDate = new DateTime(2015, 12, 12), DepartmentBudget = 5500, Country = Japan, DepartmentCity = "Tokyo", DepartmentPhone = "+834636", DepartmentAddressLine = "2 Chome-1-2 Nagatachō, Chiyoda-ku, Tōkyō-to 100-0014, Japan" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.Economics.ToString(), SetupDate = new DateTime(2015, 1, 12), DepartmentBudget = 300, Country = Sweden, DepartmentCity = "Malmö", DepartmentPhone = "+46879494", DepartmentAddressLine = "Gatan 1" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.HR.ToString(), SetupDate = new DateTime(2015, 4, 12), DepartmentBudget = 500, Country = Sweden, DepartmentCity = "Hässleholm", DepartmentPhone = "+46465464", DepartmentAddressLine = "Gatan 2" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.Economics.ToString(), SetupDate = new DateTime(2015, 1, 12), DepartmentBudget = 300, Country = Denmark, DepartmentCity = "Kolding", DepartmentPhone = "+4523564", DepartmentAddressLine = "Dansk Gatan 1" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.HR.ToString(), SetupDate = new DateTime(2015, 4, 12), DepartmentBudget = 500, Country = Denmark, DepartmentCity = " Copenhagen[", DepartmentPhone = "+4546235", DepartmentAddressLine = "Dansk Gatan 2" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.IT.ToString(), SetupDate = new DateTime(2015, 12, 12), DepartmentBudget = 5500, Country = Denmark, DepartmentCity = "Copenhagen[", DepartmentPhone = "+45124464", DepartmentAddressLine = "Dansk Gatan 3" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.Economics.ToString(), SetupDate = new DateTime(2015, 1, 12), DepartmentBudget = 300, Country = Norway, DepartmentCity = "Bodø", DepartmentPhone = "+4742354", DepartmentAddressLine = "Norsk Gatan 1" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.HR.ToString(), SetupDate = new DateTime(2015, 4, 12), DepartmentBudget = 500, Country = Norway, DepartmentCity = "Arendal", DepartmentPhone = "+471251", DepartmentAddressLine = "Norsk Gatan 2" },
+                new Department {DepartmentId = Guid.NewGuid().ToString(), DepartmentName = DepartmentNames.IT.ToString(), SetupDate = new DateTime(2015, 12, 12), DepartmentBudget = 5500, Country = Norway, DepartmentCity = "Gjøvik", DepartmentPhone = "+47346346", DepartmentAddressLine = "Norsk Gatan 3" },
             }; 
             foreach(Department d in departments)
             {
@@ -75,30 +109,36 @@ namespace HrApplicationFinal.Data
 
         private static async Task CreateDefaultUsers(UserManager<ApplicationUser> userManger, ILogger<ApplicationDbInitialize> logger, ApplicationDbContext context, string role)
         {
-            var ITDepartment = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT)).FirstOrDefault();
-            var HRDepartment = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.HR)).FirstOrDefault();
-            var EconomicsDepartment = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.Economics)).FirstOrDefault();
+            var ITDepartmentJapan = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Japan.ToString())).Single();
+            var ITDepartmentSweden = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Sweden.ToString())).Single();
+            var ITDepartmentDenmark = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Denmark.ToString())).Single();
+            var ITDepartmentNorway = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Norway.ToString())).Single();
+
+            var HRDepartmentJapan = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.HR.ToString()) && x.Country.CountryName.Equals(CountryNames.Japan.ToString())).Single();
+            var HRDepartmentSweden = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.HR.ToString()) && x.Country.CountryName.Equals(CountryNames.Sweden.ToString())).Single();
+            var HRDepartmentDenmark = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.HR.ToString()) && x.Country.CountryName.Equals(CountryNames.Denmark.ToString())).Single();
+            var HRDepartmentNorway = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.HR.ToString()) && x.Country.CountryName.Equals(CountryNames.Norway.ToString())).Single();
+
+            var EconomicsDepartmentJapan = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.Economics.ToString()) && x.Country.CountryName.Equals(CountryNames.Japan.ToString())).Single();
+            var EconomicsDepartmentSweden = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.Economics.ToString()) && x.Country.CountryName.Equals(CountryNames.Sweden.ToString())).Single();
+            var EconomicsTDepartmentDenmark = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.Economics.ToString()) && x.Country.CountryName.Equals(CountryNames.Denmark.ToString())).Single();
+            var EconomicsDepartmentNorway = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.Economics.ToString()) && x.Country.CountryName.Equals(CountryNames.Norway.ToString())).Single();
 
             logger.LogInformation($"Create default users with email for application");
             var applicationUsers = new ApplicationUser[]
             {
-                new ApplicationUser{UserName = "User1@hr.com", Email = "User1@hr.com", FirstName = "test", LastName = "Bubben", HireDate = new DateTime(2011, 1, 1), Salary = 1423, SalaryMax = 12314, SalaryMin = 13, PhoneNumber = "124124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartment },
-                new ApplicationUser{UserName = "User2@hr.com", Email = "User2@hr.com", FirstName = "tstest", LastName = "Babe", HireDate = new DateTime(2013, 1, 1), Salary = 1253, SalaryMax = 12354, SalaryMin = 124, PhoneNumber = "543636", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartment },
-                new ApplicationUser{UserName = "User3@hr.com", Email = "User3@hr.com", FirstName = "ststst", LastName = "Nilsson", HireDate = new DateTime(2014, 1, 1), Salary = 1223, SalaryMax = 12354, SalaryMin = 1235, PhoneNumber = "1246344124", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartment },
-                new ApplicationUser{UserName = "User4@hr.com", Email = "User4@hr.com", FirstName = "rrr", LastName = "Svensson", HireDate = new DateTime(2015, 1, 1), Salary = 1223, SalaryMax = 12324, SalaryMin = 513, PhoneNumber = "4124124", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartment },
-                new ApplicationUser{UserName = "User5@hr.com", Email = "User5@hr.com", FirstName = "ey", LastName = "Johansson", HireDate = new DateTime(2017, 1, 1), Salary = 1223, SalaryMax = 12234, SalaryMin = 5313, PhoneNumber = "235", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartment },
-                new ApplicationUser{UserName = "User7@hr.com", Email = "User7@hr.com", FirstName = "Jodgdfgnathan", LastName = "Nilsson", HireDate = new DateTime(2011, 1, 1), Salary = 1423, SalaryMax = 12314, SalaryMin = 13, PhoneNumber = "124124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartment },
-                new ApplicationUser{UserName = "User8@hr.com", Email = "User8@hr.com", FirstName = "Erdfgdgika", LastName = "Erikasson", HireDate = new DateTime(2013, 1, 1), Salary = 1253, SalaryMax = 12354, SalaryMin = 1254, PhoneNumber = "543636", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartment },
-                new ApplicationUser{UserName = "User9@hr.com", Email = "User9@hr.com", FirstName = "dfgdfg", LastName = "Ólsson", HireDate = new DateTime(2014, 1, 1), Salary = 455, SalaryMax = 12354, SalaryMin = 1355, PhoneNumber = "1241", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartment },
-                new ApplicationUser{UserName = "User10@hr.com", Email = "User10@hr.com", FirstName = "dfgdfg", LastName = "Månsson", HireDate = new DateTime(2015, 1, 1), Salary = 124, SalaryMax = 12324, SalaryMin = 5143, PhoneNumber = "44", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartment },
-                new ApplicationUser{UserName = "User11@hr.com", Email = "User11@hr.com", FirstName = "dfgdfg", LastName = "Svensson", HireDate = new DateTime(2016, 1, 1), Salary = 634, SalaryMax = 12324, SalaryMin = 1153, PhoneNumber = "235235", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartment },
-                new ApplicationUser{UserName = "User12@hr.com", Email = "User12@hr.com", FirstName = "dfgdfg", LastName = "Kyllönen", HireDate = new DateTime(2017, 1, 1), Salary = 23523, SalaryMax = 12234, SalaryMin = 313, PhoneNumber = "235", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartment },
-                new ApplicationUser{UserName = "User13@hr.com", Email = "User13@hr.com", FirstName = "dfgdfg", LastName = "Kyllönen", HireDate = new DateTime(2011, 1, 1), Salary = 2352, SalaryMax = 12314, SalaryMin = 13, PhoneNumber = "124142124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartment },
-                new ApplicationUser{UserName = "User14@hr.com", Email = "User14@hr.com", FirstName = "aaa", LastName = "Dansken", HireDate = new DateTime(2013, 1, 1), Salary = 1253, SalaryMax = 12354, SalaryMin = 1244, PhoneNumber = "541243636", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartment },
-                new ApplicationUser{UserName = "User15@hr.com", Email = "User15@hr.com", FirstName = "aasf", LastName = "Nilsson", HireDate = new DateTime(2014, 1, 1), Salary = 1223, SalaryMax = 12354, SalaryMin = 1435, PhoneNumber = "124124", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartment },
-                new ApplicationUser{UserName = "User16@hr.com", Email = "User16@hr.com", FirstName = "asfaf", LastName = "Dihn", HireDate = new DateTime(2015, 1, 1), Salary = 1623, SalaryMax = 12324, SalaryMin = 5113, PhoneNumber = "124", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartment },
-                new ApplicationUser{UserName = "User17@hr.com", Email = "User17@hr.com", FirstName = "afasf", LastName = "Dihn", HireDate = new DateTime(2016, 1, 1), Salary = 414, SalaryMax = 12324, SalaryMin = 1153, PhoneNumber = "12414", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartment },
-                new ApplicationUser{UserName = "User18@hr.com", Email = "User18@hr.com", FirstName = "asfasf", LastName = "Dihn", HireDate = new DateTime(2017, 1, 1), Salary = 512, SalaryMax = 12234, SalaryMin = 3113, PhoneNumber = "241", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartment }
+                new ApplicationUser{UserName = "Brian@hr.com", Email = "Brian@hr.com", FirstName = "Brian", LastName = "Cicero", HireDate = new DateTime(2011, 1, 1), Salary = 1423, SalaryMax = 12314, SalaryMin = 13, PhoneNumber = "124124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentJapan },
+                new ApplicationUser{UserName = "Larry@hr.com", Email = "Larry@hr.com", FirstName = "Larry", LastName = "Lokey", HireDate = new DateTime(2013, 1, 1), Salary = 1253, SalaryMax = 12354, SalaryMin = 124, PhoneNumber = "543636", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentSweden },
+                new ApplicationUser{UserName = "Phillip@hr.com", Email = "Phillip@hr.com", FirstName = "Phillip", LastName = "Newman", HireDate = new DateTime(2014, 1, 1), Salary = 1223, SalaryMax = 12354, SalaryMin = 1235, PhoneNumber = "1246344124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentDenmark },
+                new ApplicationUser{UserName = "Michael@hr.com", Email = "Michael@hr.com", FirstName = "Michael", LastName = "Dillon", HireDate = new DateTime(2015, 1, 1), Salary = 1223, SalaryMax = 12324, SalaryMin = 513, PhoneNumber = "4124124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentNorway },
+                new ApplicationUser{UserName = "User5@hr.com", Email = "User5@hr.com", FirstName = "ey", LastName = "Johansson", HireDate = new DateTime(2017, 1, 1), Salary = 1223, SalaryMax = 12234, SalaryMin = 5313, PhoneNumber = "235", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartmentJapan },
+                new ApplicationUser{UserName = "User7@hr.com", Email = "User7@hr.com", FirstName = "Jodgdfgnathan", LastName = "Nilsson", HireDate = new DateTime(2011, 1, 1), Salary = 1423, SalaryMax = 12314, SalaryMin = 13, PhoneNumber = "124124", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartmentSweden },
+                new ApplicationUser{UserName = "User8@hr.com", Email = "User8@hr.com", FirstName = "Erdfgdgika", LastName = "Erikasson", HireDate = new DateTime(2013, 1, 1), Salary = 1253, SalaryMax = 12354, SalaryMin = 1254, PhoneNumber = "543636", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartmentDenmark },
+                new ApplicationUser{UserName = "User9@hr.com", Email = "User9@hr.com", FirstName = "dfgdfg", LastName = "Ólsson", HireDate = new DateTime(2014, 1, 1), Salary = 455, SalaryMax = 12354, SalaryMin = 1355, PhoneNumber = "1241", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartmentNorway },
+                new ApplicationUser{UserName = "User10@hr.com", Email = "User10@hr.com", FirstName = "dfgdfg", LastName = "Månsson", HireDate = new DateTime(2015, 1, 1), Salary = 124, SalaryMax = 12324, SalaryMin = 5143, PhoneNumber = "44", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartmentJapan },
+                new ApplicationUser{UserName = "User11@hr.com", Email = "User11@hr.com", FirstName = "dfgdfg", LastName = "Svensson", HireDate = new DateTime(2016, 1, 1), Salary = 634, SalaryMax = 12324, SalaryMin = 1153, PhoneNumber = "235235", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartmentSweden },
+                new ApplicationUser{UserName = "User12@hr.com", Email = "User12@hr.com", FirstName = "dfgdfg", LastName = "Kyllönen", HireDate = new DateTime(2017, 1, 1), Salary = 23523, SalaryMax = 12234, SalaryMin = 313, PhoneNumber = "235", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsTDepartmentDenmark },
+                new ApplicationUser{UserName = "User13@hr.com", Email = "User13@hr.com", FirstName = "dfgdfg", LastName = "Kyllönen", HireDate = new DateTime(2011, 1, 1), Salary = 2352, SalaryMax = 12314, SalaryMin = 13, PhoneNumber = "124142124", SetupDate = new DateTime(2015, 1, 12), Department = EconomicsDepartmentNorway }
             };
             foreach (ApplicationUser user in applicationUsers)
             {
@@ -142,7 +182,7 @@ namespace HrApplicationFinal.Data
         private static async Task<ApplicationUser> CreateDefaultAdminUser(UserManager<ApplicationUser> userManger, ILogger<ApplicationDbInitialize> logger, string email, ApplicationDbContext context)
         {
             logger.LogInformation($"Create default Admin user with email `{email}` for application");
-            var ITDepartment = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT)).FirstOrDefault();
+            var ITDepartment = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Japan.ToString())).Single();
             var user = new ApplicationUser {UserName = email, Email = email, FirstName = "Admin", LastName = "Adminsson", HireDate = new DateTime(1970, 1, 1), Salary = 123, SalaryMax = 1234, SalaryMin = 13, PhoneNumber = "124124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartment};
             var ir = await userManger.CreateAsync(user);
             if (ir.Succeeded)

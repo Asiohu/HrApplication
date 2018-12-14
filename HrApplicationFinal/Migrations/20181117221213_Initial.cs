@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace HrApplication.Migrations
+namespace HrApplicationFinal.Migrations
 {
-    public partial class InitialDb : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,16 +24,17 @@ namespace HrApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Deparments",
+                name: "Countries",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DepartmentName = table.Column<int>(type: "int", nullable: false),
+                    CountryId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Capital = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CountryName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     SetupDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Deparments", x => x.Id);
+                    table.PrimaryKey("PK_Countries", x => x.CountryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,6 +55,30 @@ namespace HrApplication.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Deparments",
+                columns: table => new
+                {
+                    DepartmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CountryId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DepartmentAddressLine = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    DepartmentBudget = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    DepartmentCity = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    DepartmentName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    DepartmentPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SetupDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Deparments", x => x.DepartmentId);
+                    table.ForeignKey(
+                        name: "FK_Deparments_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "CountryId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -93,8 +118,8 @@ namespace HrApplication.Migrations
                         name: "FK_AspNetUsers_Deparments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Deparments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "DepartmentId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -225,6 +250,11 @@ namespace HrApplication.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Deparments_CountryId",
+                table: "Deparments",
+                column: "CountryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -252,6 +282,9 @@ namespace HrApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "Deparments");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
         }
     }
 }
