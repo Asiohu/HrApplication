@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HrApplicationFinal.Models
 {
@@ -25,7 +24,6 @@ namespace HrApplicationFinal.Models
         [Display(Name = "Address"), Required(ErrorMessage = "Field can't be empty"), StringLength(maximumLength: 300, MinimumLength = 0, ErrorMessage = "must be between {1} to {2}")]
         public string DepartmentAddressLine { get; set; }
 
-   
         [Required, DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime SetupDate { get; set; }
 

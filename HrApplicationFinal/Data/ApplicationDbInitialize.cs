@@ -1,10 +1,7 @@
 ﻿using HrApplicationFinal.Models;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -110,7 +107,6 @@ namespace HrApplicationFinal.Data
         private static async Task CreateDefaultUsers(UserManager<ApplicationUser> userManger, ILogger<ApplicationDbInitialize> logger, ApplicationDbContext context, string role)
         {
             var ITDepartmentJapan = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Japan.ToString())).Single();
-            var ITDepartmentSweden = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Sweden.ToString())).Single();
             var ITDepartmentDenmark = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Denmark.ToString())).Single();
             var ITDepartmentNorway = context.Departments.Where(x => x.DepartmentName.Equals(DepartmentNames.IT.ToString()) && x.Country.CountryName.Equals(CountryNames.Norway.ToString())).Single();
 
@@ -128,7 +124,6 @@ namespace HrApplicationFinal.Data
             var applicationUsers = new ApplicationUser[]
             {
                 new ApplicationUser{UserName = "Brian@hr.com", Email = "Brian@hr.com", FirstName = "Brian", LastName = "Cicero", HireDate = new DateTime(2011, 1, 1), Salary = 1423, SalaryMax = 12314, SalaryMin = 13, PhoneNumber = "124124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentJapan },
-                new ApplicationUser{UserName = "Larry@hr.com", Email = "Larry@hr.com", FirstName = "Larry", LastName = "Lokey", HireDate = new DateTime(2013, 1, 1), Salary = 1253, SalaryMax = 12354, SalaryMin = 124, PhoneNumber = "543636", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentSweden },
                 new ApplicationUser{UserName = "Phillip@hr.com", Email = "Phillip@hr.com", FirstName = "Phillip", LastName = "Newman", HireDate = new DateTime(2014, 1, 1), Salary = 1223, SalaryMax = 12354, SalaryMin = 1235, PhoneNumber = "1246344124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentDenmark },
                 new ApplicationUser{UserName = "Michael@hr.com", Email = "Michael@hr.com", FirstName = "Michael", LastName = "Dillon", HireDate = new DateTime(2015, 1, 1), Salary = 1223, SalaryMax = 12324, SalaryMin = 513, PhoneNumber = "4124124", SetupDate = new DateTime(2015, 1, 12), Department = ITDepartmentNorway },
                 new ApplicationUser{UserName = "User5@hr.com", Email = "User5@hr.com", FirstName = "ey", LastName = "Johansson", HireDate = new DateTime(2017, 1, 1), Salary = 1223, SalaryMax = 12234, SalaryMin = 5313, PhoneNumber = "235", SetupDate = new DateTime(2015, 1, 12), Department = HRDepartmentJapan },

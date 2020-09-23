@@ -33,18 +33,75 @@ namespace HrApplicationFinal.Controllers
         public async Task<IActionResult> ListUser()
         {
             _logger.LogInformation($"ListUsers in the AdminController called");
-            var listOfUsers = new List<ListUserViewModel>();
-            var users = await _context.ApplicationUsers.Include(a => a.Department).ThenInclude(b => b.Country).OrderBy(x => x.Department.Country.CountryName).ThenBy(y => y.Department.DepartmentName).ThenBy(a => a.FullName).ToListAsync();
-            foreach(var user in users)
+           
+            var listOfUsers = await _context.ApplicationUsers.Include(a => a.Department).ThenInclude(b => b.Country).Select(c => new ListUserViewModel()
             {
-                listOfUsers.Add(new ListUserViewModel
+                Id = c.Id,
+                FullName = c.FullName,
+                DepartmentName = c.Department.DepartmentName,
+                CountryName = c.Department.Country.CountryName,
+            }).OrderBy(c => c.CountryName).ThenBy(y => y.DepartmentName).ThenBy(a => a.FullName).ToListAsync();
+           
+            return View(listOfUsers);
+        }
+
+        
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> GetDeparmentByDeparmentId(string deparmentId)
+        {
+            _logger.LogInformation($"GetDeparmentByDeparmentId in the AdminController called");
+
+            var deparment = await _context.Departments.Where(c => c.DepartmentId == deparmentId).Select(c => new EditDeparmentViewModel()
+            {
+                Id = c.DepartmentId,
+                DepartmentName = c.DepartmentName,
+                DepartmentCity = c.DepartmentCity,
+                DepartmentAddressLine = c.DepartmentAddressLine,
+                DepartmentPhone = c.DepartmentPhone
+            }).FirstOrDefaultAsync();
+
+            return View(deparment);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveDeparmentId(EditDeparmentViewModel editDeparmentViewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                if(!String.IsNullOrWhiteSpace(editDeparmentViewModel.Id))
                 {
-                    Id = user.Id,
-                    FullName = user.FullName,
-                    DepartmentName = user.Department?.DepartmentName,
-                    CountryName = user.Department.Country?.CountryName
-                });
+                    var departmentToBeEdited = await _context.Departments.Where(c => c.DepartmentId == editDeparmentViewModel.Id).SingleOrDefaultAsync();
+
+                    departmentToBeEdited.DepartmentName = editDeparmentViewModel.DepartmentName;
+                    departmentToBeEdited.DepartmentCity = editDeparmentViewModel.DepartmentCity;
+                    departmentToBeEdited.DepartmentPhone = editDeparmentViewModel.DepartmentPhone;
+                    departmentToBeEdited.DepartmentAddressLine = editDeparmentViewModel.DepartmentAddressLine;
+
+                    _context.SaveChanges();
+
+                    return RedirectToAction("ListCompanyTreeStructure");
+                }
             }
+
+            return RedirectToAction("ListCompanyTreeStructure");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> GetEmployeesByDeparmentId(string deparmentId)
+        {
+            _logger.LogInformation($"GetEmployeesByDeparmentId in the AdminController called");
+
+            var listOfUsers = await _context.ApplicationUsers.Include(a => a.Department).Where(c => c.Department.DepartmentId == deparmentId).Select(c => new ListUserViewModel()
+            {
+                Id = c.Id,
+                FullName = c.FullName
+            }).OrderBy(c => c.FullName).ToListAsync();
+
             return View(listOfUsers);
         }
 
@@ -53,17 +110,14 @@ namespace HrApplicationFinal.Controllers
         public async Task<IActionResult> ListDeparment()
         {
             _logger.LogInformation($"ListDeparments in the AdminController called");
-            var listOfDeparments = new List<ListDeparmentViewModel>();
-            var deparments = await _context.Departments.ToListAsync();
-            foreach (var department in deparments)
+
+            var listOfDeparments = await _context.Departments.Select(c => new ListDeparmentViewModel()
             {
-                listOfDeparments.Add(new ListDeparmentViewModel
-                {
-                    Id = department.DepartmentId,
-                    DepartmentName = department.DepartmentName,
-                    DepartmentBudget = department.DepartmentBudget
-                });
-            }
+                Id = c.DepartmentId,
+                DepartmentName = c.DepartmentName,
+                DepartmentBudget = c.DepartmentBudget
+            }).ToListAsync();
+           
             return View(listOfDeparments);
         }
 
@@ -72,19 +126,14 @@ namespace HrApplicationFinal.Controllers
         public async Task<IActionResult> ListCompanyTreeStructure()
         {
             _logger.LogInformation($"ListCountry in the AdminController called");
-            var listOfCountries = new List<ListCompanyTreeStructureViewModel>();
-            var countries = await _context.Countries.Include("Departments").ToListAsync();
 
-            foreach (var country in countries)
+            var listOfCountries = await _context.Countries.Include("Departments").Select(c => new ListCompanyTreeStructureViewModel() 
             {
-                listOfCountries.Add(new ListCompanyTreeStructureViewModel
-                {
-                    Id = country.CountryId,
-                    CountryName = country.CountryName,
-                    Capital = country.Capital,
-                    Department = country.Departments.ToList()
-                });
-            }
+                Id = c.CountryId,
+                CountryName = c.CountryName,
+                Capital = c.Capital,
+                Department = c.Departments.ToList()
+            }).ToListAsync();
 
             return View(listOfCountries);
         }

@@ -53,6 +53,18 @@
                                                             @Html.DisplayNameFor(modelItem => department.DepartmentBudget):  @Html.DisplayFor(modelItem => department.DepartmentBudget)
                                                         </h5>
                                                     </div>
+                                                    <div class="col-sm-2" style="float:right">
+
+                                                        <a asp-area="" asp-controller="Admin" asp-action="GetEmployeesByDeparmentId" asp-route-deparmentId="@department.DepartmentId">
+                                                            <img src="@Url.Content("~/images/Admin/users-icon.png")" width="50" height="50" />
+                                                        </a>
+
+                                                        <a asp-area="" asp-controller="Admin" asp-action="GetDeparmentByDeparmentId" asp-route-deparmentId="@department.DepartmentId">
+                                                            <img src="@Url.Content("~/images/Admin/deparment-edit-icon.png")" width="50" height="50" />
+                                                        </a>
+
+                                                     
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
